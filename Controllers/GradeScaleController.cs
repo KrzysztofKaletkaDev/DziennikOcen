@@ -100,6 +100,13 @@ namespace DziennikOcen.Controllers
             var gradeScale = await _context.GradeScales.FindAsync(id);
             if (gradeScale == null) return NotFound();
 
+            var isAssignedToAnyGrade = await _context.StudentGrades.AnyAsync(g => g.GradeScaleId == id);
+            if (isAssignedToAnyGrade)
+            {
+                TempData["ErrorMessage"] = $"Nie można usunąć oceny {gradeScale.Value}, ponieważ studenci posiadają już takie oceny cząstkowe w dzienniku!";
+                return RedirectToAction(nameof(Index));
+            }
+
             try
             {
                 _context.GradeScales.Remove(gradeScale);
@@ -108,7 +115,7 @@ namespace DziennikOcen.Controllers
             }
             catch (DbUpdateException)
             {
-                TempData["ErrorMessage"] = $"Nie można usunąć oceny {gradeScale.Value}, ponieważ studenci posiadają już takie oceny cząstkowe w dzienniku!";
+                TempData["ErrorMessage"] = "Wystąpił nieoczekiwany błąd bazy danych podczas próby usunięcia.";
             }
 
             return RedirectToAction(nameof(Index));

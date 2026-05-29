@@ -59,6 +59,12 @@ namespace DziennikOcen.Data
                 .HasForeignKey(u => u.RoleId)
                 .OnDelete(DeleteBehavior.Restrict);
 
+            modelBuilder.Entity<StudentGrade>()
+                .HasOne(g => g.GradeClassification)
+                .WithMany()
+                .HasForeignKey(g => g.GradeClassificationId)
+                .OnDelete(DeleteBehavior.Restrict);
+
             modelBuilder.Entity<Role>().HasData(
                 new Role { Id = 1, Name = "Admin" },
                 new Role { Id = 2, Name = "Lecturer" }

@@ -103,6 +103,13 @@ namespace DziennikOcen.Controllers
             var classification = await _context.GradeClassifications.FindAsync(id);
             if (classification == null) return NotFound();
 
+            var isAssignedToAnyGrade = await _context.StudentGrades.AnyAsync(g => g.GradeClassificationId == id);
+            if (isAssignedToAnyGrade)
+            {
+                TempData["ErrorMessage"] = $"Nie można usunąć kategorii '{classification.Name}', ponieważ studenci posiadają w dzienniku oceny cząstkowe z tego typu zadania!";
+                return RedirectToAction(nameof(Index));
+            }
+
             try
             {
                 _context.GradeClassifications.Remove(classification);
@@ -111,7 +118,7 @@ namespace DziennikOcen.Controllers
             }
             catch (DbUpdateException)
             {
-                TempData["ErrorMessage"] = $"Nie można usunąć kategorii '{classification.Name}', ponieważ studenci posiadają w dzienniku oceny cząstkowe z tego typu zadania!";
+                TempData["ErrorMessage"] = "Wystąpił nieoczekiwany błąd bazy danych podczas próby usunięcia.";
             }
 
             return RedirectToAction(nameof(Index));
