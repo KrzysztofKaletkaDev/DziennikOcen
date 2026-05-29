@@ -1,0 +1,27 @@
+﻿@model DziennikOcen.Models.Course
+
+@{
+    ViewData["Title"] = "Dodaj Przedmiot";
+}
+
+<div class="container mt-4" style="max-width: 600px;">
+    <div class="card shadow-sm p-4">
+        <h4 class="mb-3 text-primary">Dodaj Nowy Przedmiot</h4>
+        <hr />
+
+        <form asp-action="Create" method="post">
+            @Html.AntiForgeryToken()
+
+            <div class="mb-3">
+                <label asp-for="Name" class="form-label">Nazwa przedmiotu akademickiego</label>
+                <input asp-for="Name" class="form-control" placeholder="np. Podstawy inżynierii oprogramowania" />
+                <span asp-validation-for="Name" class="text-danger small"></span>
+            </div>
+
+            <div class="d-flex justify-content-between mt-4">
+                <a asp-action="Index" class="btn btn-secondary">Powrót do listy</a>
+                <button type="submit" class="btn btn-success">Zapisz przedmiot</button>
+            </div>
+        </form>
+    </div>
+</div>

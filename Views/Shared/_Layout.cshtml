@@ -21,11 +21,32 @@
                 <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
                     <ul class="navbar-nav flex-grow-1">
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Strona Główna</a>
                         </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
-                        </li>
+
+                        @if (User.IsInRole("Admin"))
+                        {
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle text-dark" href="#" id="adminDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                    Panel Administratora
+                                </a>
+                                <ul class="dropdown-menu" aria-labelledby="adminDropdown">
+                                    <li><a class="dropdown-item" asp-controller="Course" asp-action="Index">Zarządzanie Przedmiotami</a></li>
+                                    <li><a class="dropdown-item" asp-controller="Student" asp-action="Index">Zarządzanie Studentami</a></li>
+                                    <li><a class="dropdown-item" asp-controller="User" asp-action="Index">Zarządzanie Prowadzącymi</a></li>
+                                </ul>
+                            </li>
+                        }
+    
+                        @if (User.Identity?.IsAuthenticated == true)
+                        {
+                            <li class="nav-item ms-auto">
+                                <span class="navbar-text text-dark me-3">
+                                    Zalogowany jako: <strong>@User.FindFirst(System.Security.Claims.ClaimTypes.GivenName)?.Value</strong>
+                                </span>
+                                <a class="btn btn-outline-danger btn-sm" asp-controller="Account" asp-action="Logout">Wyloguj się</a>
+                            </li>
+                        }
                     </ul>
                 </div>
             </div>
