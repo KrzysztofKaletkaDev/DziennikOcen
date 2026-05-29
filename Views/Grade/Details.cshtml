@@ -1,0 +1,88 @@
+﻿@model IEnumerable<DziennikOcen.Models.StudentGrade>
+
+@{
+    var student = ViewBag.Student as DziennikOcen.Models.Student;
+    ViewData["Title"] = $"Karta ocen - {student?.FirstName} {student?.LastName}";
+}
+
+<div class="container mt-4" style="max-width: 900px;">
+    <div class="d-flex justify-content-between align-items-center mb-4 p-3 bg-light rounded border shadow-sm">
+        <div>
+            <span class="text-muted small text-uppercase fw-bold">Profil Studenta</span>
+            <h2 class="text-secondary mb-0">@student?.LastName @student?.FirstName</h2>
+        </div>
+        <div>
+            <span class="text-muted small d-block text-end fw-bold">Numer albumu</span>
+            <span class="badge bg-dark fs-5 px-3 py-2">@student?.StudentNumber</span>
+        </div>
+    </div>
+
+    <div class="mb-3">
+        <a asp-action="Index" class="btn btn-outline-secondary btn-sm">
+            <i class="bi bi-arrow-left"></i> Powrót do pulpitu
+        </a>
+    </div>
+
+    @if (!Model.Any())
+    {
+        <div class="alert alert-info text-center py-4 shadow-sm" role="alert">
+            <i class="bi bi-info-circle-fill fs-4 d-block mb-2"></i>
+            Ten student nie posiada jeszcze żadnych zarejestrowanych ocen w systemie.
+        </div>
+    }
+    else
+    {
+        // Grupowanie ocen po ID i Nazwie przedmiotu
+        var groupedGrades = Model.GroupBy(g => new { g.CourseId, g.Course.Name });
+
+        @foreach (var courseGroup in groupedGrades.OrderBy(g => g.Key.Name))
+        {
+            // Wyliczanie średniej ocen dla danego przedmiotu
+            var average = courseGroup.Average(g => g.GradeScale.Value);
+
+            <div class="card shadow-sm mb-4 border-0">
+                <div class="card-header bg-white border-bottom d-flex justify-content-between align-items-center py-3">
+                    <h5 class="mb-0 text-primary fw-bold">
+                        <i class="bi bi-book-half me-2"></i> @courseGroup.Key.Name
+                    </h5>
+                    <div>
+                        <span class="text-muted me-2 small">Średnia ocen:</span>
+                        <span class="badge @(average < 3.0m ? "bg-danger" : "bg-success") fs-6 px-2.5 py-1.5">
+                            @average.ToString("F2")
+                        </span>
+                    </div>
+                </div>
+
+                <div class="table-responsive">
+                    <table class="table align-middle mb-0 table-sm">
+                        <thead class="table-light">
+                            <tr>
+                                <th style="width: 20%" class="ps-3">Ocena</th>
+                                <th style="width: 30%">Kategoria (Klasyfikacja)</th>
+                                <th style="width: 50%">Wystawił(a)</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var grade in courseGroup.OrderBy(g => g.GradeClassification.Name))
+                            {
+                                <tr>
+                                    <td class="ps-3">
+                                        <span class="fs-5 fw-bold text-dark">@grade.GradeScale.Value.ToString("F1")</span>
+                                    </td>
+                                    <td>
+                                        <span class="badge bg-light text-dark border border-secondary-subtle px-2 py-1">
+                                            @grade.GradeClassification.Name
+                                        </span>
+                                    </td>
+                                    <td class="text-muted small">
+                                        <i class="bi bi-person text-secondary"></i> @grade.Lecturer?.FirstName @grade.Lecturer?.LastName
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        }
+    }
+</div>

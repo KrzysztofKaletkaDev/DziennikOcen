@@ -1,0 +1,22 @@
+﻿@{
+    ViewData["Title"] = "Oczekiwanie na uprawnienia";
+}
+
+<div class="container mt-5 text-center" style="max-width: 600px;">
+    <div class="card shadow p-5 border-0">
+        <div class="text-warning mb-4">
+            <i class="bi bi-shield-lock" style="font-size: 4rem;"></i>
+        </div>
+        <h3 class="text-secondary">Konto aktywne, brak przypisanego panelu</h3>
+        <p class="text-muted mt-3">
+            Twoje konto zostało pomyślnie zarejestrowane w systemie, jednak przypisana do Ciebie rola nie posiada jeszcze skonfigurowanego dedykowanego panelu roboczego.
+        </p>
+        <hr />
+        <p class="small text-secondary">
+            Skontaktuj się z Głównym Administratorem systemu w celu weryfikacji Twoich uprawnień akademickich.
+        </p>
+        <div class="mt-4">
+            <a class="btn btn-outline-danger btn-sm" asp-controller="Account" asp-action="Logout">Wyloguj się</a>
+        </div>
+    </div>
+</div>

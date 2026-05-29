@@ -1,54 +1,54 @@
 ﻿<!DOCTYPE html>
-<html lang="en">
+<html lang="pl">
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>@ViewData["Title"] - DziennikOcen</title>
-    <script type="importmap"></script>
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/DziennikOcen.styles.css" asp-append-version="true" />
 </head>
-<body>
+<body class="d-flex flex-column min-vh-100" style="margin-bottom: 0 !important;">
     <header>
         <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
             <div class="container-fluid">
-                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">DziennikOcen</a>
+                <a class="navbar-brand fw-bold text-primary" asp-area="" asp-controller="Home" asp-action="Index">
+                    <i class="bi bi-graduation-cap-fill"></i> DziennikOcen
+                </a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
                         aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
                 </button>
                 <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
-                    <ul class="navbar-nav flex-grow-1">
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Strona Główna</a>
-                        </li>
-
+                    <ul class="navbar-nav flex-grow-1 align-items-center">
                         @if (User.IsInRole("Admin"))
                         {
                             <li class="nav-item dropdown">
-                                <a class="nav-link dropdown-toggle text-dark" href="#" id="adminDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                    Panel Administratora
+                                <a class="nav-link dropdown-toggle text-dark fw-semibold" href="#" id="adminDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                    <i class="bi bi-gear"></i> Panel Administratora
                                 </a>
-                                <ul class="dropdown-menu" aria-labelledby="adminDropdown">
-                                <li><a class="dropdown-item" asp-controller="Course" asp-action="Index">Zarządzanie Przedmiotami</a></li>
-                                <li><a class="dropdown-item" asp-controller="Student" asp-action="Index">Zarządzanie Studentami</a></li>
-                                <li><a class="dropdown-item" asp-controller="User" asp-action="Index">Zarządzanie Użytkownikami</a></li>
-                                <li><a class="dropdown-item" asp-controller="Role" asp-action="Index">Słownik Ról Systemowych</a></li>
-                                <li><hr class="dropdown-divider"></li>
-                                <li><a class="dropdown-item" asp-controller="GradeScale" asp-action="Index">Skala Ocen</a></li>
-                                <li><a class="dropdown-item" asp-controller="GradeClassification" asp-action="Index">Klasyfikacja Ocen</a></li>
+                                <ul class="dropdown-menu shadow-sm" aria-labelledby="adminDropdown">
+                                    <li><a class="dropdown-item" asp-controller="Course" asp-action="Index"><i class="bi bi-book me-2"></i>Zarządzanie Przedmiotami</a></li>
+                                    <li><a class="dropdown-item" asp-controller="Student" asp-action="Index"><i class="bi bi-people me-2"></i>Zarządzanie Studentami</a></li>
+                                    <li><a class="dropdown-item" asp-controller="User" asp-action="Index"><i class="bi bi-person-gear me-2"></i>Zarządzanie Użytkownikami</a></li>
+                                    <li><a class="dropdown-item" asp-controller="Role" asp-action="Index"><i class="bi bi-shield-shaded me-2"></i>Słownik Ról Systemowych</a></li>
+                                    <li><hr class="dropdown-divider"></li>
+                                    <li><a class="dropdown-item" asp-controller="GradeScale" asp-action="Index"><i class="bi bi-bookmark-star me-2"></i>Skala Ocen</a></li>
+                                    <li><a class="dropdown-item" asp-controller="GradeClassification" asp-action="Index"><i class="bi bi-tags me-2"></i>Klasyfikacja Ocen</a></li>
                                 </ul>
                             </li>
                         }
-    
+                        
                         @if (User.Identity?.IsAuthenticated == true)
                         {
-                            <li class="nav-item ms-auto">
+                            <li class="nav-item ms-auto d-flex align-items-center">
                                 <span class="navbar-text text-dark me-3">
-                                    Zalogowany jako: <strong>@User.FindFirst(System.Security.Claims.ClaimTypes.GivenName)?.Value</strong>
+                                    <i class="bi bi-person-circle text-secondary"></i> Zalogowany jako: <strong>@User.FindFirst(System.Security.Claims.ClaimTypes.GivenName)?.Value</strong>
                                 </span>
-                                <a class="btn btn-outline-danger btn-sm" asp-controller="Account" asp-action="Logout">Wyloguj się</a>
+                                <a class="btn btn-outline-danger btn-sm" asp-controller="Account" asp-action="Logout">
+                                    <i class="bi bi-box-arrow-right"></i> Wyloguj się
+                                </a>
                             </li>
                         }
                     </ul>
@@ -56,17 +56,25 @@
             </div>
         </nav>
     </header>
+    
     <div class="container">
         <main role="main" class="pb-3">
             @RenderBody()
         </main>
     </div>
 
-    <footer class="border-top footer text-muted">
-        <div class="container">
-            &copy; 2026 - DziennikOcen - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+    <footer class="border-top footer text-muted bg-white py-3 mt-auto">
+        <div class="container d-flex flex-column flex-sm-row justify-content-between align-items-center gap-2">
+            <div>
+                <span class="text-dark fw-bold">&copy; 2026 DziennikOcen</span>
+                <span class="text-secondary ms-1 d-none d-sm-inline">| System Ewidencji Postępów Akademickich</span>
+            </div>
+            <div class="text-secondary small">
+                <i class="bi bi-code-slash text-primary fw-bold"></i> Made with <i class="bi bi-heart-fill text-danger"></i> by <strong class="text-dark">Krzysztof Kaletka</strong>
+            </div>
         </div>
     </footer>
+
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>

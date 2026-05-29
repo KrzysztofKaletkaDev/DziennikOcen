@@ -1,0 +1,109 @@
+﻿@model IEnumerable<DziennikOcen.Models.Student>
+
+@{
+    ViewData["Title"] = "Panel Prowadzącego";
+}
+
+<div class="container mt-4">
+    <div class="row mb-4 align-items-center">
+        <div class="col-md-6">
+            <h2><i class="bi bi-journal-check text-success"></i> Pulpit Oceniania Studenckiego</h2>
+            <p class="text-muted mb-0">Zarządzaj ocenami, wyszukuj studentów i przeglądaj transkrypcje.</p>
+        </div>
+
+        <div class="col-md-6">
+            <div class="input-group shadow-sm">
+                <span class="input-group-text bg-white border-end-0">
+                    <i class="bi bi-search text-muted"></i>
+                </span>
+                <input type="text" id="studentSearchInput" class="form-control border-start-0"
+                       placeholder="Wpisz nazwisko studenta lub numer indeksu (np. s12345)..." onkeyup="filterStudentsTable()" />
+            </div>
+        </div>
+    </div>
+
+    <div class="card shadow-sm border-0">
+        <div class="table-responsive">
+            <table class="table table-hover align-middle mb-0" id="studentsMainTable">
+                <thead class="table-light">
+                    <tr>
+                        <th style="width: 20%">Numer Indeksu</th>
+                        <th style="width: 25%">Nazwisko</th>
+                        <th style="width: 25%">Imię</th>
+                        <th style="width: 30%" class="text-end">Dostępne Akcje</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (!Model.Any())
+                    {
+                        <tr id="emptyRowPlaceholder">
+                            <td colspan="4" class="text-center text-muted py-4">Brak zarejestrowanych studentów w bazie danych dziennika.</td>
+                        </tr>
+                    }
+                    @foreach (var item in Model)
+                    {
+                        <tr class="student-data-row">
+                            <td>
+                                <span class="badge bg-dark px-3 py-2 fs-6 student-index-cell">@item.StudentNumber</span>
+                            </td>
+                            <td class="fw-bold text-secondary student-lastname-cell">@item.LastName</td>
+                            <td>@item.FirstName</td>
+                            <td class="text-end">
+                                <a asp-action="Manage" asp-route-id="@item.Id" class="btn btn-sm btn-primary me-2">
+                                    <i class="bi bi-pencil-square"></i> Oceny z przedmiotu
+                                </a>
+
+                                <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-sm btn-outline-secondary">
+                                    <i class="bi bi-file-earmark-person"></i> Pełna karta ocen
+                                </a>
+                            </td>
+                        </tr>
+                    }
+                    <tr id="noSearchResultsRow" style="display: none;">
+                        <td colspan="4" class="text-center text-danger py-4">
+                            <i class="bi bi-exclamation-circle"></i> Brak pasujących studentów dla wpisanej frazy.
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        function filterStudentsTable() {
+            var input = document.getElementById("studentSearchInput");
+            var filter = input.value.toLowerCase().trim();
+            var table = document.getElementById("studentsMainTable");
+            var rows = table.getElementsByClassName("student-data-row");
+            var visibleRowsCount = 0;
+
+            for (var i = 0; i < rows.length; i++) {
+                var lastNameCell = rows[i].getElementsByClassName("student-lastname-cell")[0];
+                var indexCell = rows[i].getElementsByClassName("student-index-cell")[0];
+
+                if (lastNameCell || indexCell) {
+                    var lastNameText = lastNameCell.textContent || lastNameCell.innerText;
+                    var indexText = indexCell.textContent || indexCell.innerText;
+
+                    if (lastNameText.toLowerCase().indexOf(filter) > -1 || indexText.toLowerCase().indexOf(filter) > -1) {
+                        rows[i].style.display = "";
+                        visibleRowsCount++;
+                    } else {
+                        rows[i].style.display = "none";
+                    }
+                }
+            }
+
+            var noResultsRow = document.getElementById("noSearchResultsRow");
+            if (rows.length > 0) {
+                if (visibleRowsCount === 0) {
+                    noResultsRow.style.display = "";
+                } else {
+                    noResultsRow.style.display = "none";
+                }
+            }
+        }
+    </script>
+}

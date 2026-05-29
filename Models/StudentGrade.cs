@@ -18,8 +18,8 @@ namespace DziennikOcen.Models
         public int GradeScaleId { get; set; }
         public GradeScale GradeScale { get; set; } = null!;
 
-        public int AssessmentTypeId { get; set; }
-        public AssessmentType AssessmentType { get; set; } = null!;
+        public int? AssessmentTypeId { get; set; }
+        public AssessmentType? AssessmentType { get; set; } = null!;
 
         [Required]
         public DateTime DateAssigned { get; set; } = DateTime.Now;

@@ -1,0 +1,168 @@
+﻿@model IEnumerable<DziennikOcen.Models.StudentGrade>
+@{
+    var student = ViewBag.Student as DziennikOcen.Models.Student;
+    int? selectedCourseId = ViewBag.SelectedCourseId as int?;
+    var loggedUserEmail = User.Identity?.Name;
+    ViewData["Title"] = $"Zarządzanie ocenami - {student?.FirstName} {student?.LastName}";
+}
+
+<div class="container mt-4" style="max-width: 900px;">
+
+    @if (TempData["SuccessMessage"] != null)
+    {
+        <div class="alert alert-success alert-dismissible fade show shadow-sm" role="alert">
+            <i class="bi bi-check-circle-fill me-2"></i> @TempData["SuccessMessage"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    }
+    @if (TempData["ErrorMessage"] != null)
+    {
+        <div class="alert alert-danger alert-dismissible fade show shadow-sm" role="alert">
+            <i class="bi bi-exclamation-triangle-fill me-2"></i> @TempData["ErrorMessage"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    }
+
+    <div class="card shadow-sm border-0 mb-4 bg-light">
+        <div class="card-body d-flex justify-content-between align-items-center py-3">
+            <div>
+                <a asp-action="Index" class="btn btn-sm btn-outline-secondary mb-2"><i class="bi bi-arrow-left"></i> Powrót</a>
+                <h4 class="mb-0 text-secondary">Arkusz: <strong>@student?.LastName @student?.FirstName</strong></h4>
+            </div>
+
+            @if (selectedCourseId.HasValue)
+            {
+                <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#gradeModal" onclick="prepareAddModal()">
+                    <i class="bi bi-plus-lg"></i> Wystaw ocenę
+                </button>
+            }
+        </div>
+    </div>
+
+    <div class="card shadow-sm border-0 mb-4">
+        <div class="card-body bg-white rounded border">
+            <form method="get" asp-action="Manage" class="row align-items-end">
+                <input type="hidden" name="id" value="@student?.Id" />
+                <div class="col-md-9">
+                    <select name="courseId" class="form-select" asp-items="ViewBag.Courses" onchange="this.form.submit()">
+                        <option value="">-- Wybierz przedmiot, aby zobaczyć oceny --</option>
+                    </select>
+                </div>
+                <div class="col-md-3">
+                    <span class="text-muted small">Wybierz przedmiot z listy</span>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    @if (selectedCourseId.HasValue)
+    {
+        <div class="card shadow-sm border-0">
+            <div class="table-responsive">
+                <table class="table align-middle mb-0">
+                    <thead class="table-light text-secondary small text-uppercase">
+                        <tr>
+                            <th class="ps-4">Ocena</th>
+                            <th>Klasyfikacja</th>
+                            <th>Wystawił</th>
+                            <th class="text-end pe-4">Akcje</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @if (!Model.Any())
+                        {
+                            <tr>
+                                <td colspan="4" class="text-center text-muted py-4">Brak ocen z tego przedmiotu dla wybranego studenta.</td>
+                            </tr>
+                        }
+                        @foreach (var grade in Model)
+                        {
+                            bool isOwner = grade.Lecturer?.Email == loggedUserEmail;
+                            <tr>
+                                <td class="ps-4"><span class="fs-4 fw-bold @(grade.GradeScale.Value < 3 ? "text-danger" : "text-primary")">@grade.GradeScale.Value.ToString("F1")</span></td>
+                                <td><span class="badge bg-light text-dark border">@grade.GradeClassification.Name</span></td>
+                                <td class="text-muted small">@grade.Lecturer?.FirstName @grade.Lecturer?.LastName</td>
+                                <td class="text-end pe-4">
+                                    @if (isOwner)
+                                    {
+                                        <button class="btn btn-sm btn-outline-warning border-0"
+                                                onclick="prepareEditModal('@grade.Id', '@grade.GradeScaleId', '@grade.GradeClassificationId')">
+                                            <i class="bi bi-pencil"></i>
+                                        </button>
+                                        <form asp-action="DeleteGrade" asp-route-id="@grade.Id" method="post" class="d-inline" onsubmit="return confirm('Usunąć ocenę?');">
+                                            @Html.AntiForgeryToken()
+                                            <button type="submit" class="btn btn-sm btn-outline-danger border-0">
+                                                <i class="bi bi-trash"></i>
+                                            </button>
+                                        </form>
+                                    }
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    }
+</div>
+
+<div class="modal fade" id="gradeModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content border-0 shadow">
+            <div class="modal-header bg-primary text-white">
+                <h5 class="modal-title" id="modalTitle">Wystaw nową ocenę</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+            <form id="gradeForm" method="post">
+                <div class="modal-body">
+                    @Html.AntiForgeryToken()
+                    <input type="hidden" name="StudentId" value="@student?.Id" />
+                    <input type="hidden" name="CourseId" value="@selectedCourseId" />
+                    <input type="hidden" name="id" id="gradeIdInput" />
+
+                    <div class="mb-3">
+                        <label class="form-label fw-bold">Stopień:</label>
+                        <select name="GradeScaleId" id="scaleSelect" class="form-select form-select-lg fw-bold text-primary" asp-items="ViewBag.Scales" required>
+                            <option value="">-- wybierz stopień --</option>
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label fw-bold">Kategoria:</label>
+                        <select name="GradeClassificationId" id="classSelect" class="form-select" asp-items="ViewBag.Classifications" required>
+                            <option value="">-- wybierz kategorię --</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="modal-footer bg-light">
+                    <button type="button" class="btn @Url.Action("Index", "Grade")" data-bs-dismiss="modal">Anuluj</button>
+                    <button type="submit" class="btn btn-primary px-4" id="submitBtn">Zapisz w dzienniku</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        function prepareAddModal() {
+            document.getElementById('modalTitle').innerText = "Wystaw nową ocenę";
+            document.getElementById('gradeForm').action = '@Url.Action("CreateGrade", "Grade")';
+            document.getElementById('gradeIdInput').value = "0";
+            document.getElementById('scaleSelect').value = "";
+            document.getElementById('classSelect').value = "";
+            document.getElementById('submitBtn').className = "btn btn-success px-4";
+        }
+
+        function prepareEditModal(id, scaleId, classId) {
+            document.getElementById('modalTitle').innerText = "Edytuj ocenę cząstkową";
+            document.getElementById('gradeForm').action = '@Url.Action("EditGrade", "Grade")';
+            document.getElementById('gradeIdInput').value = id;
+            document.getElementById('scaleSelect').value = scaleId;
+            document.getElementById('classSelect').value = classId;
+            document.getElementById('submitBtn').className = "btn btn-warning px-4";
+
+            var myModal = new bootstrap.Modal(document.getElementById('gradeModal'));
+            myModal.show();
+        }
+    </script>
+}
