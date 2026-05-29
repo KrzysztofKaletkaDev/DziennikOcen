@@ -1,0 +1,40 @@
+﻿@model DziennikOcen.Models.Student
+
+@{
+    ViewData["Title"] = "Dodaj Studenta";
+}
+
+<div class="container mt-4" style="max-width: 600px;">
+    <div class="card shadow-sm p-4">
+        <h4 class="mb-3 text-primary">Karta Nowego Studenta</h4>
+        <hr />
+
+        <form asp-action="Create" method="post">
+            @Html.AntiForgeryToken()
+
+            <div class="mb-3">
+                <label asp-for="FirstName" class="form-label">Imię</label>
+                <input asp-for="FirstName" class="form-control" placeholder="np. Jan" />
+                <span asp-validation-for="FirstName" class="text-danger small"></span>
+            </div>
+
+            <div class="mb-3">
+                <label asp-for="LastName" class="form-label">Nazwisko</label>
+                <input asp-for="LastName" class="form-control" placeholder="np. Kowalski" />
+                <span asp-validation-for="LastName" class="text-danger small"></span>
+            </div>
+
+            <div class="mb-3">
+                <label asp-for="StudentNumber" class="form-label">Numer indeksu</label>
+                <input asp-for="StudentNumber" class="form-control" placeholder="np. s12345" />
+                <div class="form-text text-muted">Format: mała litera 's' oraz dokładnie 5 cyfr.</div>
+                <span asp-validation-for="StudentNumber" class="text-danger small"></span>
+            </div>
+
+            <div class="d-flex justify-content-between mt-4">
+                <a asp-action="Index" class="btn btn-secondary">Powrót</a>
+                <button type="submit" class="btn btn-success">Zapisz studenta</button>
+            </div>
+        </form>
+    </div>
+</div>

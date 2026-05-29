@@ -31,9 +31,13 @@
                                     Panel Administratora
                                 </a>
                                 <ul class="dropdown-menu" aria-labelledby="adminDropdown">
-                                    <li><a class="dropdown-item" asp-controller="Course" asp-action="Index">Zarządzanie Przedmiotami</a></li>
-                                    <li><a class="dropdown-item" asp-controller="Student" asp-action="Index">Zarządzanie Studentami</a></li>
-                                    <li><a class="dropdown-item" asp-controller="User" asp-action="Index">Zarządzanie Prowadzącymi</a></li>
+                                <li><a class="dropdown-item" asp-controller="Course" asp-action="Index">Zarządzanie Przedmiotami</a></li>
+                                <li><a class="dropdown-item" asp-controller="Student" asp-action="Index">Zarządzanie Studentami</a></li>
+                                <li><a class="dropdown-item" asp-controller="User" asp-action="Index">Zarządzanie Użytkownikami</a></li>
+                                <li><a class="dropdown-item" asp-controller="Role" asp-action="Index">Słownik Ról Systemowych</a></li>
+                                <li><hr class="dropdown-divider"></li>
+                                <li><a class="dropdown-item" asp-controller="GradeScale" asp-action="Index">Skala Ocen</a></li>
+                                <li><a class="dropdown-item" asp-controller="GradeClassification" asp-action="Index">Klasyfikacja Ocen</a></li>
                                 </ul>
                             </li>
                         }

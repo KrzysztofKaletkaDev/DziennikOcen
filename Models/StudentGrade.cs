@@ -25,5 +25,9 @@ namespace DziennikOcen.Models
         public DateTime DateAssigned { get; set; } = DateTime.Now;
 
         public string? OptionalDescription { get; set; }
+
+        [Required(ErrorMessage = "Klasyfikacja oceny jest wymagana.")]
+        public int GradeClassificationId { get; set; }
+        public GradeClassification? GradeClassification { get; set; }
     }
 }

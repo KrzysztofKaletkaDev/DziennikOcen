@@ -18,6 +18,7 @@ namespace DziennikOcen.Controllers
         }
 
         [HttpGet]
+        [ResponseCache(Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Login()
         {
             if (User.Identity?.IsAuthenticated == true)
@@ -37,7 +38,7 @@ namespace DziennikOcen.Controllers
 
             var user = await _context.Users
                 .Include(u => u.Role)
-                .FirstOrDefaultAsync(u => u.Email == model.Email);
+                .FirstOrDefaultAsync(u => u.Email == model.Email && u.IsActive);
 
             if (user != null)
             {

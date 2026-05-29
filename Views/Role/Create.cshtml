@@ -1,0 +1,28 @@
+﻿@model DziennikOcen.Models.Role
+
+@{
+    ViewData["Title"] = "Nowa Rola";
+}
+
+<div class="container mt-4" style="max-width: 500px;">
+    <div class="card shadow-sm p-4">
+        <h4 class="mb-3 text-primary">Nowa Rola Dostępowa</h4>
+        <hr />
+
+        <form asp-action="Create" method="post">
+            @Html.AntiForgeryToken()
+
+            <div class="mb-3">
+                <label asp-for="Name" class="form-label">Nazwa roli (identyfikator tekstowy)</label>
+                <input asp-for="Name" class="form-control" placeholder="np. Dziekanat" />
+                <div class="form-text text-muted">Zaleca się wpisywanie nazw z wielkiej litery, bez spacji.</div>
+                <span asp-validation-for="Name" class="text-danger small"></span>
+            </div>
+
+            <div class="d-flex justify-content-between mt-4">
+                <a asp-action="Index" class="btn btn-secondary">Powrót</a>
+                <button type="submit" class="btn btn-success">Zapisz w bazie</button>
+            </div>
+        </form>
+    </div>
+</div>

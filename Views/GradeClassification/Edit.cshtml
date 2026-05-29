@@ -1,0 +1,29 @@
+﻿@model DziennikOcen.Models.GradeClassification
+
+@{
+    ViewData["Title"] = "Edytuj Kategorię";
+}
+
+<div class="container mt-4" style="max-width: 550px;">
+    <div class="card shadow-sm p-4">
+        <h4 class="mb-3 text-warning">Modyfikacja Typu Klasyfikacji</h4>
+        <hr />
+
+        <form asp-action="Edit" method="post">
+            @Html.AntiForgeryToken()
+            <div asp-validation-summary="ModelOnly" class="text-danger small mb-3"></div>
+            <input type="hidden" asp-for="Id" />
+
+            <div class="mb-3">
+                <label asp-for="Name" class="form-label">Nazwa kategorii</label>
+                <input asp-for="Name" class="form-control" />
+                <span asp-validation-for="Name" class="text-danger small"></span>
+            </div>
+
+            <div class="d-flex justify-content-between mt-4">
+                <a asp-action="Index" class="btn btn-secondary">Anuluj</a>
+                <button type="submit" class="btn btn-primary">Zapisz zmiany</button>
+            </div>
+        </form>
+    </div>
+</div>

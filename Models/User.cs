@@ -28,6 +28,7 @@ namespace DziennikOcen.Models
 
         public int RoleId { get; set; }
         public Role Role { get; set; } = null!;
+        public bool IsActive { get; set; } = true;
 
         public ICollection<StudentGrade> GivenGrades { get; set; } = new List<StudentGrade>();
     }

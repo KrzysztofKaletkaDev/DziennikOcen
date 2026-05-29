@@ -1,0 +1,53 @@
+﻿@model DziennikOcen.Models.UserCreateViewModel
+
+@{
+    ViewData["Title"] = "Dodaj Prowadzącego";
+}
+
+<div class="container mt-4" style="max-width: 600px;">
+    <div class="card shadow-sm p-4">
+        <h4 class="mb-3 text-primary">Nowy Profil Wykładowcy</h4>
+        <hr />
+
+        <form asp-action="Create" method="post">
+            @Html.AntiForgeryToken()
+
+            <div class="mb-3">
+                <label asp-for="FirstName" class="form-label">Imię</label>
+                <input asp-for="FirstName" class="form-control" placeholder="np. Tomasz" />
+                <span asp-validation-for="FirstName" class="text-danger small"></span>
+            </div>
+
+            <div class="mb-3">
+                <label asp-for="LastName" class="form-label">Nazwisko</label>
+                <input asp-for="LastName" class="form-control" placeholder="np. Nowak" />
+                <span asp-validation-for="LastName" class="text-danger small"></span>
+            </div>
+
+            <div class="mb-3">
+                <label asp-for="Email" class="form-label">Uczelniany adres e-mail (Login)</label>
+                <input asp-for="Email" class="form-control" type="email" placeholder="t.nowak@uczelnia.pl" />
+                <span asp-validation-for="Email" class="text-danger small"></span>
+            </div>
+
+            <div class="mb-3">
+                <label asp-for="RoleId" class="form-label">Rola systemowa (Uprawnienia)</label>
+                <select asp-for="RoleId" class="form-select" asp-items="ViewBag.Roles">
+                    <option value="">-- Wybierz rolę z listy --</option>
+                </select>
+                <span asp-validation-for="RoleId" class="text-danger small"></span>
+            </div>
+
+            <div class="mb-3">
+                <label asp-for="Password" class="form-label">Hasło dostępowe dla prowadzącego</label>
+                <input asp-for="Password" class="form-control" type="password" placeholder="••••••••" />
+                <span asp-validation-for="Password" class="text-danger small"></span>
+            </div>
+
+            <div class="d-flex justify-content-between mt-4">
+                <a asp-action="Index" class="btn btn-secondary">Powrót</a>
+                <button type="submit" class="btn btn-success">Utwórz konto kadrowe</button>
+            </div>
+        </form>
+    </div>
+</div>

@@ -4,6 +4,7 @@ using DziennikOcen.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DziennikOcen.Migrations
 {
     [DbContext(typeof(GradingSystemDbContext))]
-    partial class GradingSystemDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260529110001_AddIsActiveToUser")]
+    partial class AddIsActiveToUser
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -60,24 +63,6 @@ namespace DziennikOcen.Migrations
                         .IsUnique();
 
                     b.ToTable("Courses");
-                });
-
-            modelBuilder.Entity("DziennikOcen.Models.GradeClassification", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("GradeClassifications");
                 });
 
             modelBuilder.Entity("DziennikOcen.Models.GradeScale", b =>
@@ -211,9 +196,6 @@ namespace DziennikOcen.Migrations
                     b.Property<DateTime>("DateAssigned")
                         .HasColumnType("datetime2");
 
-                    b.Property<int>("GradeClassificationId")
-                        .HasColumnType("int");
-
                     b.Property<int>("GradeScaleId")
                         .HasColumnType("int");
 
@@ -231,8 +213,6 @@ namespace DziennikOcen.Migrations
                     b.HasIndex("AssessmentTypeId");
 
                     b.HasIndex("CourseId");
-
-                    b.HasIndex("GradeClassificationId");
 
                     b.HasIndex("GradeScaleId");
 
@@ -292,7 +272,7 @@ namespace DziennikOcen.Migrations
                             FirstName = "System",
                             IsActive = true,
                             LastName = "Administrator",
-                            PasswordHash = "AQAAAAIAAYagAAAAEHis5W5GG23NFOSrKvIItXZTE+7spKZiP+Qw7ui0xMZs0qGJhFFOaLhYqCvyeschQA==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEC5Gh5ZYxwVXuITcDppk3s22/HDq0ndrJaoCmKplMbPcG+/Zdnm3JFZsw9tpe0CddQ==",
                             RoleId = 1
                         });
                 });
@@ -309,12 +289,6 @@ namespace DziennikOcen.Migrations
                         .WithMany("Grades")
                         .HasForeignKey("CourseId")
                         .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.HasOne("DziennikOcen.Models.GradeClassification", "GradeClassification")
-                        .WithMany()
-                        .HasForeignKey("GradeClassificationId")
-                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("DziennikOcen.Models.GradeScale", "GradeScale")
@@ -338,8 +312,6 @@ namespace DziennikOcen.Migrations
                     b.Navigation("AssessmentType");
 
                     b.Navigation("Course");
-
-                    b.Navigation("GradeClassification");
 
                     b.Navigation("GradeScale");
 

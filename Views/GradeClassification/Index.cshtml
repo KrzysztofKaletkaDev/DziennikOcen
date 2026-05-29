@@ -1,0 +1,66 @@
+﻿@model IEnumerable<DziennikOcen.Models.GradeClassification>
+
+@{
+    ViewData["Title"] = "Klasyfikacja Ocen";
+}
+
+<div class="container mt-4" style="max-width: 800px;">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2><i class="bi bi-tags"></i> Klasyfikacja Ocen (Typy Zadań)</h2>
+        <a asp-action="Create" class="btn btn-primary"><i class="bi bi-plus-circle"></i> Dodaj Kategorię</a>
+    </div>
+
+    @if (TempData["ErrorMessage"] != null)
+    {
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            <i class="bi bi-exclamation-triangle-fill"></i> @TempData["ErrorMessage"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    }
+
+    @if (TempData["SuccessMessage"] != null)
+    {
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            <i class="bi bi-check-circle-fill"></i> @TempData["SuccessMessage"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    }
+
+    <div class="card shadow-sm">
+        <div class="table-responsive">
+            <table class="table table-hover align-middle mb-0">
+                <thead class="table-light">
+                    <tr>
+                        <th style="width: 20%">ID</th>
+                        <th style="width: 50%">Nazwa klasyfikacji / kategorii</th>
+                        <th style="width: 30%" class="text-end">Akcje</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (!Model.Any())
+                    {
+                        <tr>
+                            <td colspan="3" class="text-center text-muted py-4">Słownik klasyfikacji jest pusty. Dodaj pierwsze kategorie (np. Kolokwium).</td>
+                        </tr>
+                    }
+                    @foreach (var item in Model)
+                    {
+                        <tr>
+                            <td><code>#@item.Id</code></td>
+                            <td class="fw-bold text-secondary">@item.Name</td>
+                            <td class="text-end">
+                                <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-sm btn-outline-warning me-2">Edytuj</a>
+
+                                <form asp-action="Delete" asp-route-id="@item.Id" method="post" class="d-inline"
+                                      onsubmit="return confirm('Czy na pewno chcesz bezpowrotnie usunąć tę kategorię klasyfikacji ze słownika?');">
+                                    @Html.AntiForgeryToken()
+                                    <button type="submit" class="btn btn-sm btn-outline-danger">Usuń</button>
+                                </form>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

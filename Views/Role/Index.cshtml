@@ -1,0 +1,73 @@
+﻿@model IEnumerable<DziennikOcen.Models.Role>
+
+@{
+    ViewData["Title"] = "Słownik Ról";
+}
+
+<div class="container mt-4" style="max-width: 800px;">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2><i class="bi bi-shield-shaded"></i> Słownik Ról Systemowych</h2>
+        <a asp-action="Create" class="btn btn-primary"><i class="bi bi-plus-circle"></i> Dodaj Rolę</a>
+    </div>
+
+    @if (TempData["ErrorMessage"] != null)
+    {
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            <i class="bi bi-cone-striped"></i> @TempData["ErrorMessage"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    }
+
+    @if (TempData["SuccessMessage"] != null)
+    {
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            <i class="bi bi-check-circle-fill"></i> @TempData["SuccessMessage"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    }
+
+    <div class="card shadow-sm">
+        <div class="table-responsive">
+            <table class="table align-middle mb-0">
+                <thead class="table-light">
+                    <tr>
+                        <th style="width: 15%">ID</th>
+                        <th style="width: 50%">Nazwa roli</th>
+                        <th style="width: 35%" class="text-end">Akcje</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model)
+                    {
+                        <tr>
+                            <td><code>#@item.Id</code></td>
+                            <td class="fw-bold">
+                                @item.Name
+                                @if (item.Id == 1 || item.Id == 2)
+                                {
+                                    <span class="badge bg-dark ms-2" style="font-size: 0.75rem;">Systemowa (Tylko odczyt)</span>
+                                }
+                            </td>
+                            <td class="text-end">
+                                @if (item.Id != 1 && item.Id != 2)
+                                {
+                                    <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-sm btn-outline-warning me-2">Edytuj</a>
+                                    <form asp-action="Delete" asp-route-id="@item.Id" method="post" class="d-inline"
+                                          onsubmit="return confirm('Czy na pewno chcesz bezpowrotnie usunąć tę rolę?');">
+                                        @Html.AntiForgeryToken()
+                                        <button type="submit" class="btn btn-sm btn-outline-danger">Usuń</button>
+                                    </form>
+                                }
+                                else
+                                {
+                                    <button class="btn btn-sm btn-light text-muted me-2" disabled>Edytuj</button>
+                                    <button class="btn btn-sm btn-light text-muted" disabled>Usuń</button>
+                                }
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

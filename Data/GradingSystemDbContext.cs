@@ -16,6 +16,7 @@ namespace DziennikOcen.Data
         public DbSet<GradeScale> GradeScales { get; set; } = null!;
         public DbSet<AssessmentType> AssessmentTypes { get; set; } = null!;
         public DbSet<StudentGrade> StudentGrades { get; set; } = null!;
+        public DbSet<GradeClassification> GradeClassifications { get; set; } = null!;
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
